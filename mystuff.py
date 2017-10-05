@@ -6,7 +6,7 @@ class CmdProcessor:
     def __init__(self):
         self.commands = []
 
-    def regcmd(self, cmd_regex):
+    def command(self, cmd_regex):
         '''decorator for commands'''
         return lambda fun: self.add_cmd(cmd_regex,fun)
 
@@ -25,6 +25,7 @@ class CmdProcessor:
 
     def run_cmd(self, cmd_text, runfun=lambda f,m: f(m)):
         fun, match = self.parse_cmd(cmd_text)
+        return runfun(fun,match)
 
  
 def readmatr():
