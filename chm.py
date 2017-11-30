@@ -8,20 +8,25 @@ class ThermSolver():
     def __init__(self, xsize, xsteps, dt, tsteps, initial_temp, diff_coeff, ih_fun):
         self.xsize = xsize
         self.xsteps = xsteps 
-        self.dx = xsize/xsteps
         self.dt = dt 
         self.tsteps = tsteps 
-        self.maxt = tsteps * dt
         self.initial_temp = initial_temp 
         self.diff_coeff = diff_coeff 
         self.ih_fun = ih_fun
-    
+        self.mkdeps()
+
+
+    def mkdeps(self):
+        self.dx = self.xsize/self.xsteps
+        self.maxt = self.tsteps * self.dt
+
 
     def update(self, *args, **kwargs):
         self.__init__(*args, **kwargs)
 
 
     def solve(self, tsteps = None):
+        self.mkdeps()
         self.xes = np.linspace(0,self.xsize,self.xsteps)
         self.grid = [np.array([self.initial_temp(x) for x in self.xes])]
 
@@ -59,7 +64,4 @@ class ThermSolver():
     def get_solution(self):
         return lambda x,t: self.get_value(x,t)
 
-    def _d2xx(self,xn,tn):
-        return self.grid[tn].take(xn+1, mode='wrap') + self.grid[tn].take(xn-1, mode='wrap') - 2*self.grid[tn][xn]
-        
 
